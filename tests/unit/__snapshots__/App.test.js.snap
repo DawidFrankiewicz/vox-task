@@ -1,0 +1,6 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Should render correctly 1`] = `
+"<div data-v-7a7a37b1=""><a data-v-7a7a37b1="" href="https://vitejs.dev" target="_blank"><img data-v-7a7a37b1="" src="/vite.svg" class="logo" alt="Vite logo"></a><a data-v-7a7a37b1="" href="https://vuejs.org/" target="_blank"><img data-v-7a7a37b1="" src="/src/assets/vue.svg" class="logo vue" alt="Vue logo"></a></div>
+<hello-world-stub data-v-7a7a37b1="" msg="Vite + Vue"></hello-world-stub>"
+`;
