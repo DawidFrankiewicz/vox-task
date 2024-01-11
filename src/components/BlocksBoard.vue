@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import { ColorValueRgb } from '../types';
+import { Block } from '../types';
 
 import { ref } from 'vue';
-import Block from './Block.vue';
+import BlockDisplay from './BlockDisplay.vue';
+import { v4 as uuidv4 } from 'uuid';
 
-const blocksColorValuesHex = ref<ColorValueRgb[]>([]);
+const blocks = ref<Block[]>([]);
 
-const randomRgbColorValue = (): ColorValueRgb => {
+const randomRgbColorValue = (): [number, number, number] => {
     // Get random RGB values (0-255)
     const randomR = Math.round(Math.random() * 256);
     const randomG = Math.round(Math.random() * 256);
@@ -15,16 +16,36 @@ const randomRgbColorValue = (): ColorValueRgb => {
     return [randomR, randomG, randomB];
 };
 
+const randomHexColorValue = (): string => {
+    const [randomR, randomG, randomB] = randomRgbColorValue();
+
+    // Convert RGB values to hex, pad with 0 if needed
+    const hexR = randomR.toString(16).padStart(2, '0');
+    const hexG = randomG.toString(16).padStart(2, '0');
+    const hexB = randomB.toString(16).padStart(2, '0');
+
+    // Return hex color value in format #RRGGBB
+    return `#${hexR}${hexG}${hexB}`;
+};
+
 const addRandomBlock = (): void => {
-    blocksColorValuesHex.value.push(randomRgbColorValue());
+    const newBlock: Block = {
+        // Generate random UUID
+        id: uuidv4(),
+        color: randomHexColorValue(),
+    };
+    blocks.value.push(newBlock);
 };
 
-const removeBlock = (index: number): void => {
-    blocksColorValuesHex.value.splice(index, 1);
+const removeBlock = (id: string): void => {
+    blocks.value = blocks.value.filter((block) => block.id !== id);
 };
 
-const editBlock = (index: number, newHexValue: ColorValueRgb): void => {
-    blocksColorValuesHex.value[index] = newHexValue;
+const editBlock = (id: string, newColorValue: string): void => {
+    const foundBlock = blocks.value.find((block) => block.id === id);
+    if (foundBlock) {
+        foundBlock.color = newColorValue;
+    }
 };
 </script>
 
@@ -37,14 +58,14 @@ const editBlock = (index: number, newHexValue: ColorValueRgb): void => {
         </div>
 
         <div class="blocks__container">
-            <Block
-                v-for="(color, index) in blocksColorValuesHex"
-                @removeBlock="removeBlock(index)"
+            <BlockDisplay
+                v-for="block in blocks"
+                :key="block.id"
+                @removeBlock="removeBlock(block.id)"
                 @editBlock="
-                    (index, newHexValue) => editBlock(index, newHexValue)
+                    (newColorValue) => editBlock(block.id, newColorValue)
                 "
-                :index="index"
-                :backgroundColor="color"
+                :backgroundColor="block.color"
             />
         </div>
     </div>

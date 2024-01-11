@@ -1,1 +1,4 @@
-export type ColorValueRgb = [number, number, number];
+export type Block = {
+    id: string;
+    color: string;
+};
