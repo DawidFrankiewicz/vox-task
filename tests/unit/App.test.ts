@@ -1,4 +1,5 @@
 import { mount } from '@vue/test-utils';
+import { test, expect } from 'vitest';
 
 const factory = async () => {
     const component = await import('@/App.vue');

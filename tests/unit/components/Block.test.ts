@@ -1,5 +1,6 @@
 import { mount } from '@vue/test-utils';
 import { v4 as uuidv4 } from 'uuid';
+import { test, expect, describe } from 'vitest';
 
 const factory = async () => {
     const component = await import('@/components/Block.vue');
@@ -37,15 +38,20 @@ describe('Color editing', async () => {
         const colorInput = wrapper.find('[data-test-id="colorPickerInput"]');
         await colorInput.setValue('#ffffff');
 
-        expect(wrapper.emitted('editBlock')).toBeTruthy();
-        // Check if the emitted event has the correct value
-        expect(wrapper.emitted('editBlock')[0][1]).toBe('#ffffff');
+        const emittedEvent = wrapper.emitted('editBlock');
+        expect(emittedEvent).toBeDefined();
+        // Check if the emitted event has the correct values
+        if (emittedEvent) {
+            expect(emittedEvent[0][0]).toBe(wrapper.vm.$props.id);
+            expect(emittedEvent[0][1]).toBe('#ffffff');
+        }
     });
 
     test('Should not emit editBlock event with invalid color', async () => {
         const wrapper = await factory();
 
-        wrapper.vm.editBlock(wrapper.vm.$props.id, 'notValidHexColor');
+        // Use editBlock method directly
+        (wrapper.vm as any).editBlock(wrapper.vm.$props.id, 'notValidHexColor');
         await wrapper.vm.$nextTick();
 
         expect(wrapper.emitted('editBlock')).toBe(undefined);

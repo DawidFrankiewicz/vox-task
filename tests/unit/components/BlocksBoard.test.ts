@@ -1,6 +1,7 @@
 import { mount } from '@vue/test-utils';
 import Block from '@/components/Block.vue';
 import BlocksBoard from '@/components/BlocksBoard.vue';
+import { test, expect } from 'vitest';
 
 const factory = async () => {
     return mount(BlocksBoard, {
