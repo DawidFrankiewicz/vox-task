@@ -47,6 +47,26 @@ const editBlock = (id: string, newColorValue: string): void => {
         foundBlock.color = newColorValue;
     }
 };
+
+const swapPositions = (itemId: string, targetId: string): void => {
+    // Find items in array by id
+    const item: Block | undefined = blocks.value.find(
+        (block) => block.id === itemId
+    );
+    const targetItem: Block | undefined = blocks.value.find(
+        (block) => block.id === targetId
+    );
+
+    if (item && targetItem) {
+        // Get indexes of items
+        const itemIndex = blocks.value.indexOf(item);
+        const targetIndex = blocks.value.indexOf(targetItem);
+
+        // Swap items in array
+        blocks.value.splice(itemIndex, 1, targetItem);
+        blocks.value.splice(targetIndex, 1, item);
+    }
+};
 </script>
 
 <template>
@@ -66,8 +86,13 @@ const editBlock = (id: string, newColorValue: string): void => {
                 :key="block.id"
                 :id="block.id"
                 :backgroundColor="block.color"
-                @removeBlock="(id) => removeBlock(id)"
-                @editBlock="(id, newColorValue) => editBlock(id, newColorValue)"
+                @remove-block="(id) => removeBlock(id)"
+                @edit-block="
+                    (id, newColorValue) => editBlock(id, newColorValue)
+                "
+                @swap-positions="
+                    (itemId, targetId) => swapPositions(itemId, targetId)
+                "
             />
         </div>
     </div>

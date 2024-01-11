@@ -5,6 +5,7 @@ defineProps<{ id: string; backgroundColor: string }>();
 const emit = defineEmits<{
     (e: 'removeBlock', id: string): void;
     (e: 'editBlock', id: string, newColorValue: string): void;
+    (e: 'swapPositions', id: string, targetId: string): void;
 }>();
 
 const colorPicker = ref<HTMLInputElement | null>(null);
@@ -38,13 +39,33 @@ const editBlock = (id: string, newHexColorValue: string): void => {
         emit('editBlock', id, newHexColorValue);
     }
 };
+
+const onDragStart = (event: DragEvent, id: string): void => {
+    if (event.dataTransfer) {
+        event.dataTransfer.dropEffect = 'move';
+        event.dataTransfer.effectAllowed = 'move';
+        event.dataTransfer.setData('id', id);
+    }
+};
+
+const onDrop = (event: DragEvent, targetId: string): void => {
+    const id = event.dataTransfer?.getData('id');
+
+    if (id) {
+        emit('swapPositions', id, targetId);
+    }
+};
 </script>
 
 <template>
     <div
         class="block"
-        draggable="true"
         :style="`background-color: ${$props.backgroundColor}`"
+        draggable="true"
+        @dragstart="onDragStart($event, $props.id)"
+        @drop="onDrop($event, $props.id)"
+        @dragenter.prevent
+        @dragover.prevent
     >
         <button
             data-test-id="removeBlockButton"
