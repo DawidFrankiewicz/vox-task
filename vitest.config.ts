@@ -13,7 +13,7 @@ export default defineConfig({
         globals: true,
         coverage: {
             provider: 'v8',
-            include: ['src/components/**', 'src/app.vue'],
+            include: ['src/components/**', 'src/App.vue'],
         },
         environment: 'jsdom',
     },
