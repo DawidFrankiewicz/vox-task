@@ -54,18 +54,20 @@ const editBlock = (id: string, newColorValue: string): void => {
         <h1 class="board__header">VOX Kolorowe Kafelki</h1>
 
         <div class="controlls__container">
-            <button @click="addRandomBlock">Dodaj Kafelek</button>
+            <button data-test-id="addRandomBlockButton" @click="addRandomBlock">
+                Dodaj Kafelek
+            </button>
         </div>
 
         <div class="blocks__container">
             <VueBlock
+                data-test-id="block"
                 v-for="block in blocks"
                 :key="block.id"
-                @removeBlock="removeBlock(block.id)"
-                @editBlock="
-                    (newColorValue) => editBlock(block.id, newColorValue)
-                "
+                :id="block.id"
                 :backgroundColor="block.color"
+                @removeBlock="(id) => removeBlock(id)"
+                @editBlock="(id, newColorValue) => editBlock(id, newColorValue)"
             />
         </div>
     </div>

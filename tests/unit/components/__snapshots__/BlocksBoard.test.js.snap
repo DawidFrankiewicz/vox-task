@@ -1,0 +1,9 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Should render correctly 1`] = `
+"<div data-v-10abbbab="" class="board__container">
+  <h1 data-v-10abbbab="" class="board__header">VOX Kolorowe Kafelki</h1>
+  <div data-v-10abbbab="" class="controlls__container"><button data-v-10abbbab="" data-test-id="addRandomBlockButton"> Dodaj Kafelek </button></div>
+  <div data-v-10abbbab="" class="blocks__container"></div>
+</div>"
+`;

@@ -12,9 +12,9 @@ export default defineConfig({
     test: {
         globals: true,
         coverage: {
-            providers: 'v8',
+            provider: 'v8',
             include: ['src/components/**', 'src/app.vue'],
         },
-        environment: 'happy-dom',
+        environment: 'jsdom',
     },
 });

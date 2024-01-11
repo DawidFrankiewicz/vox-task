@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-defineProps<{ backgroundColor: string }>();
+defineProps<{ id: string; backgroundColor: string }>();
 const emit = defineEmits<{
-    (e: 'removeBlock'): void;
-    (e: 'editBlock', newColorValue: string): void;
+    (e: 'removeBlock', id: string): void;
+    (e: 'editBlock', id: string, newColorValue: string): void;
 }>();
 
 const colorPicker = ref<HTMLInputElement | null>(null);
@@ -33,9 +33,9 @@ const isValidHexColorValue = (stringToTest: string): boolean => {
     return false;
 };
 
-const editBlock = (newHexColorValue: string): void => {
+const editBlock = (id: string, newHexColorValue: string): void => {
     if (isValidHexColorValue(newHexColorValue)) {
-        emit('editBlock', newHexColorValue);
+        emit('editBlock', id, newHexColorValue);
     }
 };
 </script>
@@ -46,14 +46,20 @@ const editBlock = (newHexColorValue: string): void => {
         draggable="true"
         :style="`background-color: ${$props.backgroundColor}`"
     >
-        <button @click="emit('removeBlock')">Usuń</button>
+        <button
+            data-test-id="removeBlockButton"
+            @click="emit('removeBlock', $props.id)"
+        >
+            Usuń
+        </button>
         <label class="block__color-picker button">
             Zmień
             <input
+                data-test-id="colorPickerInput"
                 ref="colorPicker"
                 type="color"
                 :value="$props.backgroundColor"
-                @input="editBlock(String(colorPicker?.value))"
+                @input="editBlock($props.id, String(colorPicker?.value))"
             />
         </label>
     </div>
