@@ -8,6 +8,36 @@ const emit = defineEmits<{
 }>();
 
 const colorPicker = ref<HTMLInputElement | null>(null);
+
+const isValidHexColorValue = (stringToTest: string): boolean => {
+    // Hex color regexes for 3, 4, 6 and 8 digit hex values, ignoring case
+    const hex3ColorRegex = /^#[0-9a-f]{3}$/i;
+    const hex4ColorRegex = /^#[0-9a-f]{4}$/i;
+    const hex6ColorRegex = /^#[0-9a-f]{6}$/i;
+    const hex8ColorRegex = /^#[0-9a-f]{8}$/i;
+
+    const regexes: RegExp[] = [
+        hex6ColorRegex,
+        hex3ColorRegex,
+        hex8ColorRegex,
+        hex4ColorRegex,
+    ];
+
+    // If any of the regexes matches, return true
+    for (const regex of regexes) {
+        if (regex.test(stringToTest)) {
+            return true;
+        }
+    }
+
+    return false;
+};
+
+const editBlock = (newHexColorValue: string): void => {
+    if (isValidHexColorValue(newHexColorValue)) {
+        emit('editBlock', newHexColorValue);
+    }
+};
 </script>
 
 <template>
@@ -23,7 +53,7 @@ const colorPicker = ref<HTMLInputElement | null>(null);
                 ref="colorPicker"
                 type="color"
                 :value="$props.backgroundColor"
-                @input="emit('editBlock', String(colorPicker?.value))"
+                @input="editBlock(String(colorPicker?.value))"
             />
         </label>
     </div>

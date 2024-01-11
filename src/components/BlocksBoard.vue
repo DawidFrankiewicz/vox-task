@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { Block } from '../types';
-
 import { ref } from 'vue';
-import BlockDisplay from './BlockDisplay.vue';
+import VueBlock from './Block.vue';
 import { v4 as uuidv4 } from 'uuid';
+
+import { Block } from '../types';
 
 const blocks = ref<Block[]>([]);
 
@@ -58,7 +58,7 @@ const editBlock = (id: string, newColorValue: string): void => {
         </div>
 
         <div class="blocks__container">
-            <BlockDisplay
+            <VueBlock
                 v-for="block in blocks"
                 :key="block.id"
                 @removeBlock="removeBlock(block.id)"
