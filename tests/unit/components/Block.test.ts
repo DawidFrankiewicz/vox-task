@@ -28,7 +28,7 @@ test('Should emit removeBlock event', async () => {
     const button = wrapper.find('[data-test-id="removeBlockButton"]');
     await button.trigger('click');
 
-    expect(wrapper.emitted('removeBlock')).toBeTruthy();
+    expect(wrapper.emitted('removeBlock')).toBeDefined();
 });
 
 describe('Color editing', async () => {
@@ -55,5 +55,55 @@ describe('Color editing', async () => {
         await wrapper.vm.$nextTick();
 
         expect(wrapper.emitted('editBlock')).toBe(undefined);
+    });
+});
+
+describe('Drag and drop', async () => {
+    // Drag and drop data transfers are not supported by JSDOM
+    // So we need to mock dataTransfer
+
+    test('Should emit swapPositions event on drop', async () => {
+        const wrapper = await factory();
+        const otherBlockWrapper = await factory();
+
+        await otherBlockWrapper.trigger('dragstart', {
+            dataTransfer: {
+                setData: () => otherBlockWrapper.vm.$props.id,
+            },
+        });
+
+        const block = wrapper.find('[data-test-id="block"]');
+        await block.trigger('drop', {
+            dataTransfer: {
+                getData: () => otherBlockWrapper.vm.$props.id,
+            },
+        });
+
+        const emittedEvent = wrapper.emitted('swapPositions');
+        expect(emittedEvent).toBeDefined();
+        // Check if the emitted event has the correct values
+        if (emittedEvent) {
+            expect(emittedEvent[0][0]).toBe(otherBlockWrapper.vm.$props.id);
+            expect(emittedEvent[0][1]).toBe(wrapper.vm.$props.id);
+        }
+    });
+
+    test('Should not emit swapPositions event when dropped on itself', async () => {
+        const wrapper = await factory();
+
+        await wrapper.trigger('dragstart', {
+            dataTransfer: {
+                setData: () => wrapper.vm.$props.id,
+            },
+        });
+
+        const block = wrapper.find('[data-test-id="block"]');
+        await block.trigger('drop', {
+            dataTransfer: {
+                getData: () => wrapper.vm.$props.id,
+            },
+        });
+
+        expect(wrapper.emitted('swapPositions')).toBeUndefined();
     });
 });

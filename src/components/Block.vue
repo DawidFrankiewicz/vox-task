@@ -52,6 +52,11 @@ const onDrop = (event: DragEvent, targetId: string): void => {
     const id = event.dataTransfer?.getData('id');
 
     if (id) {
+        // Prevent event when dropping on itself
+        if (id === targetId) {
+            return;
+        }
+
         emit('swapPositions', id, targetId);
     }
 };
@@ -59,6 +64,7 @@ const onDrop = (event: DragEvent, targetId: string): void => {
 
 <template>
     <div
+        data-test-id="block"
         class="block"
         :style="`background-color: ${$props.backgroundColor}`"
         draggable="true"

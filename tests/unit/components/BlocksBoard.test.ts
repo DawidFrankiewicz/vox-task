@@ -73,3 +73,31 @@ test('Should edit block', async () => {
 
     expect(block.vm.backgroundColor).toBe('#000000');
 });
+
+test('Should swap blocks positions on drop', async () => {
+    const wrapper = await deepFactory();
+
+    // Add 2 random blocks
+    const button = wrapper.find('[data-test-id="addRandomBlockButton"]');
+    await button.trigger('click');
+    await wrapper.vm.$nextTick();
+    await button.trigger('click');
+    await wrapper.vm.$nextTick();
+
+    const expectedSwappedBlocksArray = [
+        ...(wrapper.vm as any).blocks,
+    ].reverse();
+
+    const blocks = wrapper.findAllComponents(Block);
+    expect(blocks[0].exists()).toBe(true);
+    expect(blocks[1].exists()).toBe(true);
+
+    // Emit swapPositions event from Block component,
+    // case: first block is dragged and dropped on the second one
+    blocks[1].vm.$emit('swapPositions', blocks[0].vm.id, blocks[1].vm.id);
+    expect(blocks[1].emitted('swapPositions')).toBeDefined;
+
+    expect((wrapper.vm as any).blocks).toStrictEqual(
+        expectedSwappedBlocksArray
+    );
+});
