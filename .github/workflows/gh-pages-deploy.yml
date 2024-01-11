@@ -3,10 +3,10 @@ name: Github Pages Deploy
 on:
     push:
         branches:
-            - master
+            - main
     pull_request:
         branches:
-            - master
+            - main
 
     # Allows to run this workflow manually from the Actions tab
     workflow_dispatch:
@@ -23,38 +23,30 @@ concurrency:
     cancel-in-progress: true
 
 jobs:
-    gh-pages-deploy:
-        runs-on: ${{ matrix.os }}
-
-        #  Allow access to write to the gh-pages branch
-        permissions:
-            contents: write
-
-        strategy:
-            matrix:
-                os: [ubuntu-latest]
-                node: [20.5.1]
-
+    deploy:
+        environment:
+            name: github-pages
+            url: ${{ steps.deployment.outputs.page_url }}
+        runs-on: ubuntu-latest
         steps:
             - name: Checkout
-              uses: actions/checkout@v3
-
-            - name: Setup node env
-              uses: actions/setup-node@v4.0.0
+              uses: actions/checkout@v4
+            - name: Set up Node
+              uses: actions/setup-node@v3
               with:
-                  node-version: ${{ matrix.node }}
+                  node-version: 20
                   cache: 'npm'
-
-            - name: Install
+            - name: Install dependencies
               run: npm install
-
             - name: Build
               run: npm run build
-
-            - name: Deploy
-              uses: peaceiris/actions-gh-pages@v3
-              #   Deploy only on push to main branch
-              if: github.ref == 'refs/heads/main'
+            - name: Setup Pages
+              uses: actions/configure-pages@v3
+            - name: Upload artifact
+              uses: actions/upload-pages-artifact@v2
               with:
-                  github_token: ${{ secrets.GITHUB_TOKEN }}
-                  publish_dir: ./dist
+                  # Upload dist repository
+                  path: './dist'
+            - name: Deploy to GitHub Pages
+              id: deployment
+              uses: actions/deploy-pages@v2
