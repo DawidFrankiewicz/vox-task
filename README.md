@@ -4,6 +4,12 @@ This is a simple web application that allows you to generate a block with an ran
 
 The application is written in Vue 3 with TypeScript, SCSS and uses Vite as a build tool.
 
+## Live Demo
+
+You can check the live demo [here](https://dawidfrankiewicz.github.io/vox-task/).
+
+This demo is hosted on GitHub Pages and uses GitHub Actions to automatically deploy the `dist` folder to the `gh-pages` branch on every push to `main` branch.
+
 ## Project setup
 
 To install dependencies, run `npm install`.
