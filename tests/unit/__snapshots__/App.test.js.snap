@@ -1,3 +1,0 @@
-// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
-
-exports[`Should render correctly 1`] = `"<blocks-board-stub></blocks-board-stub>"`;
