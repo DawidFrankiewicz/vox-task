@@ -1,6 +1,6 @@
 # Colored Block Generator | VOX Recruitment Task
 
-This is a simple web application that allows you to generate a block with an random color. You can remove block or change it's color.
+This is a simple web application that allows you to generate a block with an random color. You can remove block or change it's color, swap blocks positions by drag & drop.
 
 The application is written in Vue 3 with TypeScript, SCSS and uses Vite as a build tool.
 
